@@ -424,6 +424,16 @@ extension Player {
     }
 
     fileprivate func play() {
+        do {
+            if #available(iOS 10.0, *) {
+                try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback, mode: AVAudioSession.Mode.default, options: .mixWithOthers)
+            } else {
+                // Fallback on earlier versions
+            }
+            try AVAudioSession.sharedInstance().setActive(true)
+        } catch {
+            print(error)
+        }
         if self.autoplay || self._hasAutoplayActivated {
             self.playbackState = .playing
             self._avplayer.play()
